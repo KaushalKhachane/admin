@@ -131,13 +131,15 @@
 				const token = localStorage.getItem('adminToken'); // Get the token from localStorage
 				if (!token) {
 					alert('You are not authorized to view this page. Please log in first.');
-					window.location.href = '../login.html'; // Redirect to login page
+					var url = configData.baseUrl+'backend/admin/login.html';
+					console.log(url)
+					window.location.href = `${url}`; // Redirect to login page
 					return;
 				}
 
 				try {
 					// Send the token to the backend for validation
-					const response = await fetch('http://localhost:3000/validate-token', {
+					const response = await fetch('https://schoolbackend-ttnv.onrender.com/validate-token', {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',
@@ -191,7 +193,7 @@
 		// Function to fetch configuration
 		async function fetchConfig() {
 			try {
-				const response = await fetch('http://localhost:3000/config');
+				const response = await fetch('https://schoolbackend-ttnv.onrender.com/config');
 				const data = await response.json();
 				configData = data; // Store the full object
 	
@@ -316,7 +318,7 @@
 		// Logout function
 		async function logout() {
 			try {
-				const response = await fetch('http://localhost:3000/logout', {
+				const response = await fetch('https://schoolbackend-ttnv.onrender.com/logout', {
 					method: 'POST',
 				});
 
