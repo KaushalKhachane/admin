@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #ff7eb3, #8e8d8d);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .form-container h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: #ff758c;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 5px;
+      color: #333333;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px 15px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+      border-color: #ff758c;
+      outline: none;
+      box-shadow: 0 0 5px rgba(255, 117, 140, 0.5);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 10px 15px;
+      font-size: 16px;
+      background-color: #ff758c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: #ff4a70;
+      transform: scale(1.05);
+    }
+
+    .register-btn {
+      width: 100%;
+      padding: 10px 15px;
+      font-size: 16px;
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .register-btn:hover {
+      background-color: #5a6268;
+      transform: scale(1.05);
+    }
+
+    .message {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 15px;
+      color: #333333;
+    }
+
+    .message.success {
+      color: #4caf50;
+    }
+
+    .message.error {
+      color: #f44336;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="form-container">
+    <h1>Admin Login</h1>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required />
+      </div>
+      <button type="submit" class="submit-btn">Login</button>
+      <div class="message" id="formMessage"></div>
+    </form>
+    <a href="registration.html" class="register-btn">Register</a>
+  </div>
+  <script>
+    // global variable so it can use throughout file
+    let configData = {};
+
+    // Fetch environment variables from backend API
+
+    fetch('http://localhost:3000/config')
+      .then((response) => response.json())
+      .then((data) => {
+        configData = data;  // Store the fetched data in the global variable
+      })
+      .catch((error) => console.error('Error fetching config:', error));
+  </script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const form = event.target;
+      const messageDiv = document.getElementById('formMessage');
+
+      // Collect login form data
+      const loginData = {
+        email: form.email.value,
+        password: form.password.value,
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(loginData),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Login failed');
+        }
+
+        const data = await response.json();
+        localStorage.setItem('adminToken', data.token); // Store the token
+        // Save admin details to localStorage
+        localStorage.setItem('adminEmail', data.admin.email);
+        localStorage.setItem('adminName', data.adminName || 'Admin'); // Store name if returned
+
+        // Show success message and redirect
+        messageDiv.textContent = 'Login successful!';
+        messageDiv.className = 'message success';
+        alert('Login successful!');
+        window.location.href = configData.baseUrl+'/backend/admin/adminhub/index.html'; // Redirect to the dashboard
+      } catch (error) {
+        console.error('Error logging in:', error);
+        messageDiv.textContent = error.message;
+        messageDiv.className = 'message error';
+      }
+    });
+  </script>
+
+</body>
+
+</html>
