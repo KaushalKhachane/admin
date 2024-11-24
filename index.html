@@ -2,374 +2,195 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-	<!-- Boxicons -->
-	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-	<!-- My CSS -->
-	<link rel="stylesheet" href="style.css">
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #ff7eb3, #8e8d8d);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    .form-container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
 
-	<title>AdminHub</title>
-	<style>
-		/* Style for admin info and logout button */
-		/* Loader styling */
-		#loading {
-			position: fixed;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			font-size: 20px;
-			color: #333;
-			z-index: 1000;
-			/* Ensure it's on top */
-		}
+    .form-container h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: #ff758c;
+    }
 
-		/* Loader styling */
-		#loading1 {
-			position: fixed;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			font-size: 20px;
-			color: #333;
-			z-index: 1000;
-			/* Ensure it's on top */
-		}
+    .form-group {
+      margin-bottom: 15px;
+    }
 
-		/* Hide content until authentication is verified */
-		body.hidden {
-			display: none;
-			/* Completely hide the body until verified */
-		}
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 5px;
+      color: #333333;
+    }
 
-		/* Hide content until authentication is verified */
-		body.hidden {
-			display: none;
-			/* Completely hide the body until verified */
-		}
+    .form-group input {
+      width: 100%;
+      padding: 10px 15px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
 
-		/* Style for admin info and logout button */
-		#admin-info {
-			position: fixed;
-			top: 10px;
-			right: 20px;
-			text-align: right;
-		}
+    .form-group input:focus {
+      border-color: #ff758c;
+      outline: none;
+      box-shadow: 0 0 5px rgba(255, 117, 140, 0.5);
+    }
 
-		#admin-info h4 {
-			margin: 0;
-			font-size: 18px;
-			color: #333;
-		}
+    .submit-btn {
+      width: 100%;
+      padding: 10px 15px;
+      font-size: 16px;
+      background-color: #ff758c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
 
-		#admin-info button {
-			margin-top: 5px;
-			padding: 5px 10px;
-			background-color: #f44336;
-			color: white;
-			border: none;
-			border-radius: 5px;
-			cursor: pointer;
-		}
+    .submit-btn:hover {
+      background-color: #ff4a70;
+      transform: scale(1.05);
+    }
 
-		#admin-info button:hover {
-			background-color: #d32f2f;
-		}
+    .register-btn {
+      width: 100%;
+      padding: 10px 15px;
+      font-size: 16px;
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
 
-		/* Stylish Welcome Message */
-		#welcome-msg {
-			font-size: 22px;
-			color: #333;
-			text-align: center;
-			margin-top: 20px;
-			font-weight: bold;
-			background-color: #f0f0f0;
-			padding: 15px;
-			border-radius: 5px;
-			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-		}
+    .register-btn:hover {
+      background-color: #5a6268;
+      transform: scale(1.05);
+    }
 
-		/* Styling for additional instructions */
-		#instructions {
-			font-size: 16px;
-			color: #555;
-			margin-top: 20px;
-			text-align: center;
-			background-color: #eef2f3;
-			padding: 15px;
-			border-radius: 10px;
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		}
+    .message {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 15px;
+      color: #333333;
+    }
 
-		/* Back button styling */
-		#back-button {
-			font-size: 16px;
-			color: #007bff;
-			cursor: pointer;
-			text-align: center;
-			display: block;
-			margin: 20px auto;
-		}
+    .message.success {
+      color: #4caf50;
+    }
 
-		#back-button:hover {
-			text-decoration: underline;
-		}
-	</style>
-	<script>
-		document.addEventListener('DOMContentLoaded', () => {
-			// Show the loading spinner by default
-			const loadingDiv = document.getElementById('loading');
-			document.body.classList.add('hidden');
-
-			// Add a slight delay before performing the authentication check
-			setTimeout(async () => {
-				const token = localStorage.getItem('adminToken'); // Get the token from localStorage
-				if (!token) {
-					alert('You are not authorized to view this page. Please log in first.');
-					var url = configData.baseUrl+'backend/admin/login.html';
-					console.log(url)
-					window.location.href = `${url}`; // Redirect to login page
-					return;
-				}
-
-				try {
-					// Send the token to the backend for validation
-					const response = await fetch('https://schoolbackend-ttnv.onrender.com/validate-token', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-							Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-						},
-					});
-
-					if (!response.ok) {
-						throw new Error('Invalid or expired token');
-					}
-
-					// Token is valid; hide the loader and show the page
-					const data = await response.json();
-
-					document.body.classList.remove('hidden');
-					loadingDiv.style.display = 'none'; // Hide the loader
-				} catch (error) {
-					console.error('Authentication failed:', error);
-					alert('Session expired. Please log in again.');
-					localStorage.removeItem('adminToken'); // Clear invalid token
-					window.location.href = '../login.html'; // Redirect to login page
-				}
-			}, 500); // 500ms delay
-		});
-	</script>
-
+    .message.error {
+      color: #f44336;
+    }
+  </style>
 </head>
 
-<body>	
-	
+<body>
+  <div class="form-container">
+    <h1>Admin Login</h1>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required />
+      </div>
+      <button type="submit" class="submit-btn">Login</button>
+      <div class="message" id="formMessage"></div>
+    </form>
+    <a href="registration.html" class="register-btn">Register</a>
+  </div>
+  <script>
+    // global variable so it can use throughout file
+    let configData = {};
 
-	<section id="sidebar">
-		<a href="#" class="brand">
-			<i class='bx bxs-smile'></i>
-			<span class="text">AdminHub</span>
-		</a>
-		<ul class="side-menu top">
-			<li class="active">
-				<a href="#">
-					<i class='bx bxs-dashboard'></i>
-					<span class="text">Admin Representative</span>
-				</a>
-			</li>
-			<!-- Links will be dynamically generated -->
-		</ul>
-	</section>
-	
-	<script>
-		let configData;
-	
-		// Function to fetch configuration
-		async function fetchConfig() {
-			try {
-				const response = await fetch('https://schoolbackend-ttnv.onrender.com/config');
-				const data = await response.json();
-				configData = data; // Store the full object
-	
-				// Call a function to dynamically populate the sidebar
-				populateSidebar();
-			} catch (error) {
-				console.error('Error fetching config:', error);
-				alert('Failed to load configuration. Please try again later.');
-			}
-		}
-	
-		// Function to populate sidebar dynamically
-		function populateSidebar() {
-			if (!configData || !configData.baseUrl) {
-				console.error('Base URL not found in configuration.');
-				return;
-			}
-	
-			const sidebarMenu = document.querySelector('.side-menu.top');
-	
-			// List of menu items
-			const menuItems = [
-				{ href: "/backend/Admin/Topper/uploadTopper.html", text: "Manage Topper", icon: "bxs-shopping-bag-alt" },
-				{ href: "/backend/Admin/Staff/updateStaff.html", text: "Manage Staff", icon: "bxs-message-dots" },
-				{ href: "/backend/Admin/Middle/middle-upload.html", text: "Manage Middle Gallery", icon: "bxs-group" },
-				{ href: "/backend/Admin/Junior/junior-upload.html", text: "Manage Junior Gallery", icon: "bxs-group" },
-				{ href: "/backend/Admin/Senior/senior-upload.html", text: "Manage Senior Gallery", icon: "bxs-group" },
-				{ href: "/backend/Admin/Social/upload.html", text: "Manage Social", icon: "bxs-group" },
-				{ href: "/backend/Admin/LatestNews/upload.html", text: "Manage Latest News", icon: "bxs-group" },
-				{ href: "/backend/Admin/Cultural/cultural-upload.html", text: "Manage Cultural", icon: "bxs-group" },
-				{ href: "/backend/Admin/HappySaturday/upload.html", text: "Manage Happy Saturday", icon: "bxs-group" },
-				{ href: "/backend/Admin/Sports/sports-upload.html", text: "Manage Sports Events", icon: "bxs-doughnut-chart" },
-				{ href: "/backend/Admin/SchoolHighlights/upload.html", text: "Manage School Highlights", icon: "bxs-group" },
-				{ href: "/backend/Admin/SchoolCommittee/committee.html", text: "Manage School Committee", icon: "bxs-group" },
-				{ href: "/backend/Admin/Carousel/upload.html", text: "Manage Carousel", icon: "bxs-group" },
-				{ href: "/backend/Admin/SportsPastData/upload.html", text: "Manage Sports Past Data", icon: "bxs-group" },
-			];
-	
-			// Dynamically create menu items
-			menuItems.forEach(item => {
-				const li = document.createElement('li');
-				const a = document.createElement('a');
-				a.href = `${configData.baseUrl}${item.href}`;
-				a.innerHTML = `
-					<i class='bx ${item.icon}'></i>
-					<span class="text">${item.text}</span>
-				`;
-				li.appendChild(a);
-				sidebarMenu.appendChild(li);
-			});
-		}
-	
-		// Fetch configuration when the page loads
-		document.addEventListener('DOMContentLoaded', fetchConfig);
-	</script>
-	
+    // Fetch environment variables from backend API
 
+    fetch('http://localhost:3000/config')
+      .then((response) => response.json())
+      .then((data) => {
+        configData = data;  // Store the fetched data in the global variable
+      })
+      .catch((error) => console.error('Error fetching config:', error));
+  </script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
 
-	<!-- CONTENT -->
-	<section id="content">
+      const form = event.target;
+      const messageDiv = document.getElementById('formMessage');
 
-		<!-- MAIN -->
-		<main>
-			<div class="head-title">
-				<div class="left">
-					<h1>Admin Dashboard</h1>
-					<ul class="breadcrumb">
-						<li>
-							<a href="#">Dashboard</a>
-						</li>
-						<li><i class='bx bx-chevron-right'></i></li>
-						<li>
-							<a class="active" href="#">Home</a>
-						</li>
-					</ul>
-				</div>
-			</div>
+      // Collect login form data
+      const loginData = {
+        email: form.email.value,
+        password: form.password.value,
+      };
 
-			<!-- Stylish Welcome Message -->
+      try {
+        const response = await fetch('http://localhost:3000/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(loginData),
+        });
 
-			<div id="welcome-msg">
-				<p>Hey, <span id="admin-email"></span>! Welcome to the Admin Dashboard!</p>
-				<p>You can manage all admin tasks such as adding/deleting staff, news, topper and much more.</p>
-			</div>
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Login failed');
+        }
 
-			<!-- Instructions -->
-			<div id="instructions">
-				<p>When you click on any section, you will be able to upload data to that section. You will also see a
-					delete button with each page. Clicking it will fetch all data within that section, and you can
-					delete individual data if needed.</p>
-				<p>If at any time you wish to return to the Admin Dashboard, a <strong>Back</strong> button is available
-					for your convenience.</p>
-			</div>
-		</main>
-		<!-- MAIN -->
-	</section>
+        const data = await response.json();
+        localStorage.setItem('adminToken', data.token); // Store the token
+        // Save admin details to localStorage
+        localStorage.setItem('adminEmail', data.admin.email);
+        localStorage.setItem('adminName', data.adminName || 'Admin'); // Store name if returned
 
-	<!-- Loader -->
-	<div id="loading">
-		<p>Loading...</p>
-	</div>
-
-	<!-- ADMIN INFO AND LOGOUT BUTTON -->
-	<div id="admin-info">
-		<h4 id="admin-name">Welcome, Admin</h4>
-		<button onclick="logout()">Logout</button>
-	</div>
-	<script src="script.js"></script>
-	<script>
-		
-		// Function to dynamically set the admin's name
-		function setAdminName(adminName) {
-			document.getElementById('admin-name').innerText = `Welcome, ${adminName}`;
-		}
-
-		// Display welcome message with email
-		function setWelcomeMessage(adminEmail) {
-			const welcomeMessage = `Hey, ${adminEmail} welcome to Admin Dashboard! You can manage all admin tasks like add/delete staff, topper, and much more.`;
-			document.getElementById('welcome-msg').innerText = welcomeMessage;
-		}
-
-		// Logout function
-		async function logout() {
-			try {
-				const response = await fetch('https://schoolbackend-ttnv.onrender.com/logout', {
-					method: 'POST',
-				});
-
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-
-				const data = await response.json();
-				if (data.message === 'Admin logged out successfully!') {
-					// Clear admin data from local storage
-					localStorage.removeItem('adminEmail');
-					localStorage.removeItem('adminName');
-					localStorage.removeItem('adminToken');
-					alert("Logged out Successfully!!!");
-					// Redirect to login page
-					window.location.href = configData.baseUrl + '/frontend/index.html';
-				} else {
-					alert('Logout failed.');
-				}
-			} catch (error) {
-				console.error('Error during logout:', error);
-				alert('An error occurred while logging out.');
-			}
-		}
-
-		// Fetch admin details from localStorage
-		function fetchAdminDetails() {
-			const adminData = localStorage.getItem('adminEmail');
-			if (adminData) {
-				return adminData;
-			} else {
-				console.error('No admin data found in localStorage.');
-				return null;
-			}
-		}
-
-		// Initialize the page
-		async function init() {
-			await fetchConfig(); // Fetch the configuration first
-			const userDetails = await fetchAdminDetails(); // Fetch user details
-			if (userDetails) {
-				setAdminName(userDetails); // Set the fetched user name
-				setWelcomeMessage(userDetails); // Set the welcome message with email
-			} else {
-				setAdminName('Admin'); // Default fallback name
-			}
-		}
-
-		// Run initialization
-		init();
-	</script>
+        // Show success message and redirect
+        messageDiv.textContent = 'Login successful!';
+        messageDiv.className = 'message success';
+        alert('Login successful!');
+        window.location.href = configData.baseUrl+'/backend/admin/adminhub/index.html'; // Redirect to the dashboard
+      } catch (error) {
+        console.error('Error logging in:', error);
+        messageDiv.textContent = error.message;
+        messageDiv.className = 'message error';
+      }
+    });
+  </script>
 
 </body>
 
