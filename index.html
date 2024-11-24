@@ -141,7 +141,7 @@
 
     // Fetch environment variables from backend API
 
-    fetch('http://localhost:3000/config')
+    fetch('https://schoolbackend-ttnv.onrender.com/config')
       .then((response) => response.json())
       .then((data) => {
         configData = data;  // Store the fetched data in the global variable
@@ -183,7 +183,7 @@
         messageDiv.textContent = 'Login successful!';
         messageDiv.className = 'message success';
         alert('Login successful!');
-        window.location.href = configData.baseUrl+'/backend/admin/adminhub/admin.html'; // Redirect to the dashboard
+        window.location.href = './admin.html'; // Redirect to the dashboard
       } catch (error) {
         console.error('Error logging in:', error);
         messageDiv.textContent = error.message;
